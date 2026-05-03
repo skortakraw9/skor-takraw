@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Skor Voli</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #f2f2f2;
+    }
+    .score {
+      font-size: 60px;
+      margin: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 18px;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      margin: 50px auto;
+      width: 300px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Skor Voli</h2>
+
+  <h3>Tim A</h3>
+  <div id="scoreA" class="score">0</div>
+  <button onclick="tambahA()">+1</button>
+
+  <h3>Tim B</h3>
+  <div id="scoreB" class="score">0</div>
+  <button onclick="tambahB()">+1</button>
+
+  <br><br>
+  <button onclick="resetSkor()">Reset</button>
+  <button onclick="kirimHasil()">Kirim Hasil</button>
+</div>
+
+<script>
+  let scoreA = 0;
+  let scoreB = 0;
+
+  function tambahA() {
+    scoreA++;
+    document.getElementById("scoreA").innerText = scoreA;
+  }
+
+  function tambahB() {
+    scoreB++;
+    document.getElementById("scoreB").innerText = scoreB;
+  }
+
+  function resetSkor() {
+    scoreA = 0;
+    scoreB = 0;
+    document.getElementById("scoreA").innerText = scoreA;
+    document.getElementById("scoreB").innerText = scoreB;
+  }
+
+  function kirimHasil() {
+    let hasil = "Hasil Pertandingan:\nTim A: " + scoreA + "\nTim B: " + scoreB;
+    
+    // Bisa diganti kirim ke server / WhatsApp / display lain
+    alert(hasil);
+
+    // Contoh simpan ke file (opsional)
+    console.log(hasil);
+  }
+</script>
+
+</body>
+</html>
