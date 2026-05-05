@@ -1,88 +1,46 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Skor Sepak Takraw</title>
-
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      background: #f2f2f2;
-    }
-
-    .container {
-      background: white;
-      padding: 20px;
-      margin: 50px auto;
-      width: 320px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .score {
-      font-size: 70px;
-      margin: 20px;
-      font-weight: bold;
-    }
-
-    button {
-      padding: 10px 18px;
-      margin: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    h2 {
-      margin-bottom: 10px;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Dashboard Turnamen</title>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="container">
-  <h2>Skor Sepak Takraw</h2>
+<h1>🏆 Dashboard Turnamen Takraw</h1>
+<div id="container"></div>
 
-  <h3>Tim A</h3>
-  <div id="scoreA" class="score">0</div>
-  <button onclick="tambahA()">+1 Tim A</button>
+<script type="module">
+import { db, ref, onValue } from './firebase.js';
 
-  <h3>Tim B</h3>
-  <div id="scoreB" class="score">0</div>
-  <button onclick="tambahB()">+1 Tim B</button>
+const container = document.getElementById("container");
 
-  <br><br>
+for (let i = 1; i <= 5; i++) {
+  const div = document.createElement("div");
+  div.className = "lapangan";
 
-  <button onclick="resetSkor()">Reset</button>
-  <button onclick="kirimHasil()">Kirim Hasil</button>
-</div>
+  div.innerHTML = `
+    <h2>Lapangan ${i}</h2>
+    <h3 id="teamA${i}">Tim A</h3>
+    <div id="A${i}" class="score">0</div>
 
-<script>
-  let scoreA = 0;
-  let scoreB = 0;
+    <h3 id="teamB${i}">Tim B</h3>
+    <div id="B${i}" class="score">0</div>
+  `;
 
-  function tambahA() {
-    scoreA++;
-    document.getElementById("scoreA").innerText = scoreA;
-  }
+  container.appendChild(div);
 
-  function tambahB() {
-    scoreB++;
-    document.getElementById("scoreB").innerText = scoreB;
-  }
-
-  function resetSkor() {
-    scoreA = 0;
-    scoreB = 0;
-    document.getElementById("scoreA").innerText = 0;
-    document.getElementById("scoreB").innerText = 0;
-  }
-
-  function kirimHasil() {
-    let hasil = "Hasil Pertandingan:\nTim A: " + scoreA + "\nTim B: " + scoreB;
-    alert(hasil);
-  }
+  onValue(ref(db, 'lapangan/' + i), (snap) => {
+    let d = snap.val();
+    if (d) {
+      document.getElementById("A"+i).innerText = d.A;
+      document.getElementById("B"+i).innerText = d.B;
+      document.getElementById("teamA"+i).innerText = d.namaA || "Tim A";
+      document.getElementById("teamB"+i).innerText = d.namaB || "Tim B";
+    }
+  });
+}
 </script>
 
 </body>
