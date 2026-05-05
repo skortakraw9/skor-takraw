@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Input Skor</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h2 id="judul"></h2>
+
+<input id="namaA" placeholder="Nama Tim A">
+<div id="scoreA" class="score">0</div>
+<button onclick="tambah('A')">+1</button>
+
+<input id="namaB" placeholder="Nama Tim B">
+<div id="scoreB" class="score">0</div>
+<button onclick="tambah('B')">+1</button>
+
+<br><br>
+<button onclick="reset()">Reset</button>
+
+<script type="module">
+import { db, ref, set, onValue } from './firebase.js';
+
+const params = new URLSearchParams(window.location.search);
+const court = params.get("court");
+
+document.getElementById("judul").innerText = "Lapangan " + court;
+
+let scoreA = 0;
+let scoreB = 0;
+
+function kirim() {
+  set(ref(db, 'lapangan/' + court), {
+    A: scoreA,
+    B: scoreB,
+    namaA: document.getElementById("namaA").value,
+    namaB: document.getElementById("namaB").value
+  });
+}
+
+window.tambah = function(tim) {
+  if (tim === 'A') scoreA++;
+  else scoreB++;
+  document.getElementById("scoreA").innerText = scoreA;
+  document.getElementById("scoreB").innerText = scoreB;
+  kirim();
+}
+
+window.reset = function() {
+  scoreA = 0;
+  scoreB = 0;
+  kirim();
+}
+
+onValue(ref(db, 'lapangan/' + court), (snap) => {
+  let d = snap.val();
+  if (d) {
+    scoreA = d.A || 0;
+    scoreB = d.B || 0;
+    document.getElementById("scoreA").innerText = scoreA;
+    document.getElementById("scoreB").innerText = scoreB;
+    document.getElementById("namaA").value = d.namaA || "";
+    document.getElementById("namaB").value = d.namaB || "";
+  }
+});
+</script>
+
+</body>
+</html>
